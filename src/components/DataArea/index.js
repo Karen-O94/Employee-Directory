@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "../DataTable";
+import SearchBar from "../SearchBar"
 import API from "../../utils/API";
 import DataAreaContext from "../../utils/DataAreaContext";
 import './style.css';
@@ -93,7 +94,7 @@ const DataArea = () => {
         <DataAreaContext.Provider
             value={{ developerState, handleSearchChange, sortingItems }}
         >
-            {/* <Nav /> */}
+            <SearchBar />
             <div className="data-area">
                 {developerState.filteredUsers.length > 0
                     ? <DataTable />
