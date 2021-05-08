@@ -29,7 +29,7 @@ const DataArea = () => {
                 order: "descend"
             });
         };
-    };
+    
 
     //This function looks at the headings and compares whether they are in ascending/descending order
     const compareFunc = (a, b) => {
@@ -55,5 +55,12 @@ const DataArea = () => {
             }
         }
     }
+    const sortedUsers = developerState.filteredUsers.sort(compareFunc);
 
+    setDeveloperState({
+        ...developerState,
+        filteredUsers: sortedUsers
+    });
+
+};
 }
