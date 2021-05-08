@@ -17,4 +17,18 @@ const DataArea = () => {
       ]
     });
 
+
+    //Function to handle the sorting of items
+    const sortingItems = heading => {
+        if (developerState.order === "descend") {
+            setDeveloperState({
+                order:"ascend"
+            })
+        } else{
+            setDeveloperState({
+                order:"descend"
+            });
+        };
+    };
+
 }
