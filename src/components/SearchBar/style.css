@@ -11,8 +11,10 @@
 }
 
 .search-area {
-    display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: flex-start;
+    margin: auto;
+    max-width: 250px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
