@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import DataTable from "../DataTable";
 import API from "../../utils/API";
 import DataAreaContext from "../../utils/DataAreaContext";
 import './style.css';
@@ -29,59 +30,78 @@ const DataArea = () => {
                 order: "descend"
             });
         };
-    
 
-    //This function looks at the headings and compares whether they are in ascending/descending order
-    const compareFunc = (a, b) => {
-        if (developerState.order === "ascend") {
-            if (a[heading] === undefined) {
-                return 1;
-            } else if (b[heading] === undefined) {
-                return -1;
-            } else if (heading === "name") {
-                return a[heading].first.localeCompare(b[heading].first);
+
+        //This function looks at the headings and compares whether they are in ascending/descending order
+        const compareFunc = (a, b) => {
+            if (developerState.order === "ascend") {
+                if (a[heading] === undefined) {
+                    return 1;
+                } else if (b[heading] === undefined) {
+                    return -1;
+                } else if (heading === "name") {
+                    return a[heading].first.localeCompare(b[heading].first);
+                } else {
+                    return b[heading] - a[heading];
+                }
             } else {
-                return b[heading] - a[heading];
-            }
-        } else {
-            if (a[heading] === undefined) {
-                return 1;
-            } else if (b[heading] === undefined) {
-                return -1;
-            } else if (heading === "name") {
-                return b[heading].first.localeCompare(a[heading].first);
-            } else {
-                return b[heading] - a[heading];
+                if (a[heading] === undefined) {
+                    return 1;
+                } else if (b[heading] === undefined) {
+                    return -1;
+                } else if (heading === "name") {
+                    return b[heading].first.localeCompare(a[heading].first);
+                } else {
+                    return b[heading] - a[heading];
+                }
             }
         }
-    }
-    const sortedUsers = developerState.filteredUsers.sort(compareFunc);
+        const sortedUsers = developerState.filteredUsers.sort(compareFunc);
 
-    setDeveloperState({
-        ...developerState,
-        filteredUsers: sortedUsers
-    });
+        setDeveloperState({
+            ...developerState,
+            filteredUsers: sortedUsers
+        });
 
-};
-const handleSearchChange = event => {
-    const filter = event.target.value;
-    const filteredList = developerState.users.filter(item => {
-      let values = item.name.first.toLowerCase();
-      return values.indexOf(filter.toLowerCase()) !== -1;
-    });
+    };
 
-    setDeveloperState({ 
-    ...developerState, 
-    filteredUsers: filteredList });
-  };
+    //This function handles any changes in the search bar
+    const handleSearchChange = event => {
+        const filter = event.target.value;
+        const filteredList = developerState.users.filter(item => {
+            let values = item.name.first.toLowerCase();
+            return values.indexOf(filter.toLowerCase()) !== -1;
+        });
 
-  useEffect(() => {
-    API.getUsers().then(results => {
-      setDeveloperState({
-        ...developerState,
-        users: results.data.results,
-        filteredUsers: results.data.results
-      });
-    });
-  }, []);
+        setDeveloperState({
+            ...developerState,
+            filteredUsers: filteredList
+        });
+    };
+
+    useEffect(() => {
+        API.getUsers().then(results => {
+            setDeveloperState({
+                ...developerState,
+                users: results.data.results,
+                filteredUsers: results.data.results
+            });
+        });
+    }, []);
+
+    return (
+        <DataAreaContext.Provider
+            value={{ developerState, handleSearchChange, sortingItems }}
+        >
+            <Nav />
+            <div className="data-area">
+                {developerState.filteredUsers.length > 0
+                    ? <DataTable />
+                    : <div></div>
+                }
+            </div>
+        </DataAreaContext.Provider>
+    );
 }
+
+export default DataArea;
